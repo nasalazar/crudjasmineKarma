@@ -1,37 +1,17 @@
 version: 2
 jobs:
-  test:
-    working_directory: ~/project-name
+  build:
+    working_directory: ~/my-project
     docker:
-      - image: 'circleci/node:10-browsers'
+      - image: circleci/node:8-browsers
     steps:
       - checkout
-      - run:
-          name: Show current branch
-          command: 'echo ${CIRCLE_BRANCH}'
       - restore_cache:
-          keys:
-            - 'v1-dependencies-{{ checksum "package-lock.json" }}'
-            - v1-dependencies-
-      - run:
-          name: Install local dependencies
-          command: npm install
+          key: AngularCircleCI-{{ .Branch }}-{{ checksum "package.json" }}
+      - run: npm install
       - save_cache:
-          key: 'v1-dependencies-{{ checksum "package-lock.json" }}'
+          key: AngularCircleCI-{{ .Branch }}-{{ checksum "package.json" }}
           paths:
-            - node_modules
-      - run:
-          name: Linting
-          command: npm run lint
-      - run:
-          name: Testing
-          command: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
-workflows:
-  version: 2
-  test_workflow:
-    jobs:
-      - deploy:
-          filters:
-            branches:
-              only:
-                - master
+            - "node_modules"
+      - run: xvfb-run -a npm run test -- --single-run --no-progress --browser=ChromeNoSandbox
+      - run: xvfb-run -a npm run e2e -- --no-progress --config=protractor-ci.conf.js
