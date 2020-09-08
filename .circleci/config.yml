@@ -1,6 +1,6 @@
  version: 2
 
-    jobs:
+ jobs:
         # The test job
         test:
             working_directory: ~/crudjasmineKarma
@@ -36,4 +36,3 @@
                     name: Testing
                     command: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
                 # End to End test
-                
