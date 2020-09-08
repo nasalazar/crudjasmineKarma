@@ -1,7 +1,7 @@
 version: 2
 jobs:
   test:
-    working_directory: ~/crudjasmineKarma
+    working_directory: ~/project-name
     docker:
       - image: 'circleci/node:10-browsers'
     steps:
